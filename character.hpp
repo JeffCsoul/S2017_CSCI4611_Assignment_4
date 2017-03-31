@@ -184,7 +184,16 @@ inline void Character::draw() {
 
     // TODO: Apply the current coordinate frame and then draw the root
     // node bones of the character.
-
+  mat4 m = this->getCurrentCoordinateFrame();
+  glPushMatrix();
+  glTranslatef(this->getCurrentPosition().x,
+               this->getCurrentPosition().y,
+               this->getCurrentPosition().z);
+  glMultMatrixf(&m[0][0]);
+  for (int i = 0; i < this->rootNodeBones.size(); i++) {
+    this->rootNodeBones[i]->draw();
+  }
+  glPopMatrix();
 }
 
 inline Bone::Bone(Reader &r, bool deg) {
@@ -196,7 +205,20 @@ inline void Bone::draw() {
     // TODO: Draw the bone as a capsule (a cylinder capped by
     // spheres). Translate to the end of the bone vector and draw the
     // bone's children, recursively.
+  glPushMatrix();
+  glTranslatef(this->getBoneVector().x,
+               this->getBoneVector().y,
+               this->getBoneVector().z);
+ glScalef(0.05, 0.05, this->length);
+  // glRotatef(rotateRate, 0, 1, 0);
+  // Draw::unitCube();
+  Draw::unitCylinderZ();
+  // glVertex3f(position.x,position.y,position.z);
 
+  for (int i = 0; i < this->children.size(); i ++) {
+    this->children[i]->draw();
+  }
+  glPopMatrix();
 }
 
 // The rest of the Character, Bone, RotationBounds implementation is
