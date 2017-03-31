@@ -116,10 +116,10 @@ public:
         // Light from above
         glEnable(GL_LIGHTING);
         setAmbientLight(vec3(0.5,0.5,0.5));
-        addLight(GL_LIGHT0, vec4(+1,1,0,0), 0.2f * vec3(1,1,1));
-        addLight(GL_LIGHT1, vec4(-1,1,0,0), 0.2f * vec3(1,1,1));
-        addLight(GL_LIGHT2, vec4(0,1,-1,0), 0.2f * vec3(1,1,1));
-        addLight(GL_LIGHT3, vec4(0,1,+1,0), 0.2f * vec3(1,1,1));
+        addLight(GL_LIGHT0, vec4(+1,1,0,0), 0.2 * vec3(1,1,1));
+        addLight(GL_LIGHT1, vec4(-1,1,0,0), 0.2 * vec3(1,1,1));
+        addLight(GL_LIGHT2, vec4(0,1,-1,0), 0.2 * vec3(1,1,1));
+        addLight(GL_LIGHT3, vec4(0,1,+1,0), 0.2 * vec3(1,1,1));
 
         // Draw floor
         drawFloor(path->getValue(time));

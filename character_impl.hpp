@@ -192,7 +192,7 @@ inline void Character::nextFrame() {
             r.readFloat(position.y);
             r.readFloat(position.z);
             position = amc2meter(position);
-            position -= basePosition + baseVelocity * (animationFrame/120.f);
+            position -= basePosition + baseVelocity * animationFrame/120.f;
             r.readFloat(orientation.x);
             r.readFloat(orientation.y);
             r.readFloat(orientation.z);
