@@ -185,11 +185,16 @@ inline void Character::draw() {
     // TODO: Apply the current coordinate frame and then draw the root
     // node bones of the character.
   mat4 m = this->getCurrentCoordinateFrame();
+  // std::cout << m <<endl;
+  // std::cout << m[0][0] << m[1][1] << m[2][2] << m[3][3] << std::endl;
+  glMultMatrixf(&m[0][0]);
   glPushMatrix();
+  // glTranslatef(m[0][0],
+  //              m[1][1],
+  //              m[2][2]);
   glTranslatef(this->getCurrentPosition().x,
                this->getCurrentPosition().y,
                this->getCurrentPosition().z);
-  glMultMatrixf(&m[0][0]);
   for (int i = 0; i < this->rootNodeBones.size(); i++) {
     this->rootNodeBones[i]->draw();
   }
@@ -205,16 +210,19 @@ inline void Bone::draw() {
     // TODO: Draw the bone as a capsule (a cylinder capped by
     // spheres). Translate to the end of the bone vector and draw the
     // bone's children, recursively.
+  vec3 rotateVec = glm::cross(vec3(0,0,1), this->direction);
+  float rotateRate = acos(glm::dot(vec3(0,0,1), this->direction));
   glPushMatrix();
-  glTranslatef(this->getBoneVector().x,
-               this->getBoneVector().y,
-               this->getBoneVector().z);
- glScalef(0.05, 0.05, this->length);
-  // glRotatef(rotateRate, 0, 1, 0);
+  glRotatef(rotateRate / M_PI * 180, rotateVec.x, rotateVec.y, rotateVec.z);
+  glScalef(0.05, 0.05, this->length);
   // Draw::unitCube();
   Draw::unitCylinderZ();
+  glScalef(20.0, 20.0, 1.0 / this->length);
   // glVertex3f(position.x,position.y,position.z);
-
+  // glTranslatef(this->getBoneVector().x,
+  //              this->getBoneVector().y,
+  //              this->getBoneVector().z);
+  glTranslatef(0,0,this->length);
   for (int i = 0; i < this->children.size(); i ++) {
     this->children[i]->draw();
   }
