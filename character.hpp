@@ -213,6 +213,7 @@ inline void Bone::draw() {
     // TODO: Draw the bone as a capsule (a cylinder capped by
     // spheres). Translate to the end of the bone vector and draw the
     // bone's children, recursively.
+  mat4 m = getCurrentLocalRotation();
   vec3 rotateVec = glm::normalize(glm::cross(vec3(0,0,1), getBoneVector()));
   float sinval = glm::length(glm::cross(vec3(0,0,1),getBoneVector())) * 1.0 /
                  (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
@@ -221,19 +222,24 @@ inline void Bone::draw() {
   float rotateRate = acos(cosval) * (sinval > 0 ? 1 : 1);
   rotateRate = rotateRate / M_PI * 180;
   glPushMatrix();
+  glMultMatrixf(&m[0][0]);
+  
+  glPushMatrix();
   glRotatef(rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
   glScalef(0.05, 0.05, length);
   Draw::unitCylinderZ();
-  glScalef(20.0, 20.0, 1.0 / length);
-  glRotatef(-rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
+  glPopMatrix();
 
   glTranslatef(this->getBoneVector().x,
                this->getBoneVector().y,
                this->getBoneVector().z);
   // glTranslatef(0,0,length);
+
+  glPushMatrix();
   glScalef(0.05, 0.05, 0.05);
   Draw::sphere(vec3(0,0,0),1);
-  glScalef(20, 20, 20);
+  glPopMatrix();
+
   for (int i = 0; i < children.size(); i ++) {
     children[i]->draw();
   }
