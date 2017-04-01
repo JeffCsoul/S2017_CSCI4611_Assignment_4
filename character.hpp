@@ -187,14 +187,17 @@ inline void Character::draw() {
   mat4 m = this->getCurrentCoordinateFrame();
   // std::cout << m <<endl;
   // std::cout << m[0][0] << m[1][1] << m[2][2] << m[3][3] << std::endl;
-  glMultMatrixf(&m[0][0]);
   glPushMatrix();
+  glMultMatrixf(&m[0][0]);
   // glTranslatef(m[0][0],
   //              m[1][1],
   //              m[2][2]);
-  glTranslatef(this->getCurrentPosition().x,
-               this->getCurrentPosition().y,
-               this->getCurrentPosition().z);
+  // glTranslatef(this->getCurrentPosition().x,
+  //              this->getCurrentPosition().y,
+  //              this->getCurrentPosition().z);
+  glScalef(0.05, 0.05, 0.05);
+  Draw::sphere(vec3(0,0,0),1);
+  glScalef(20, 20, 20);
   for (int i = 0; i < this->rootNodeBones.size(); i++) {
     this->rootNodeBones[i]->draw();
   }
@@ -210,21 +213,29 @@ inline void Bone::draw() {
     // TODO: Draw the bone as a capsule (a cylinder capped by
     // spheres). Translate to the end of the bone vector and draw the
     // bone's children, recursively.
-  vec3 rotateVec = glm::cross(vec3(0,0,1), this->direction);
-  float rotateRate = acos(glm::dot(vec3(0,0,1), this->direction));
+  vec3 rotateVec = glm::normalize(glm::cross(vec3(0,0,1), getBoneVector()));
+  float sinval = glm::length(glm::cross(vec3(0,0,1),getBoneVector())) * 1.0 /
+                 (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
+  float cosval = glm::dot(vec3(0,0,1), getBoneVector()) /
+                 (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
+  float rotateRate = acos(cosval) * (sinval > 0 ? 1 : 1);
+  rotateRate = rotateRate / M_PI * 180;
   glPushMatrix();
-  glRotatef(rotateRate / M_PI * 180, rotateVec.x, rotateVec.y, rotateVec.z);
-  glScalef(0.05, 0.05, this->length);
-  // Draw::unitCube();
+  glRotatef(rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
+  glScalef(0.05, 0.05, length);
   Draw::unitCylinderZ();
-  glScalef(20.0, 20.0, 1.0 / this->length);
-  // glVertex3f(position.x,position.y,position.z);
-  // glTranslatef(this->getBoneVector().x,
-  //              this->getBoneVector().y,
-  //              this->getBoneVector().z);
-  glTranslatef(0,0,this->length);
-  for (int i = 0; i < this->children.size(); i ++) {
-    this->children[i]->draw();
+  glScalef(20.0, 20.0, 1.0 / length);
+  glRotatef(-rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
+
+  glTranslatef(this->getBoneVector().x,
+               this->getBoneVector().y,
+               this->getBoneVector().z);
+  // glTranslatef(0,0,length);
+  glScalef(0.05, 0.05, 0.05);
+  Draw::sphere(vec3(0,0,0),1);
+  glScalef(20, 20, 20);
+  for (int i = 0; i < children.size(); i ++) {
+    children[i]->draw();
   }
   glPopMatrix();
 }
