@@ -36,8 +36,8 @@ public:
         }
         path = new Spline3;
         // Constant-velocity line
-        path->points.push_back(SplinePoint3(0, vec3(0,0,0), vec3(1.5,0,0)));
-        path->points.push_back(SplinePoint3(10, vec3(15,0,0), vec3(1.5,0,0)));
+        // path->points.push_back(SplinePoint3(0, vec3(0,0,0), vec3(1.5,0,0)));
+        // path->points.push_back(SplinePoint3(10, vec3(15,0,0), vec3(1.5,0,0)));
         /*
         // Ease-in ease-out line
         path->points.push_back(SplinePoint3(0, vec3(0,0,0), vec3(0,0,0)));
@@ -59,6 +59,11 @@ public:
         path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(1,0,-1)));
         path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,1)));
         */
+        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,3)));
+        path->points.push_back(SplinePoint3(5, vec3(0,0,5), vec3(-3,0,0)));
+        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,-3)));
+        path->points.push_back(SplinePoint3(15, vec3(0,0,-5), vec3(3,0,0)));
+        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,3)));
         time = 0;
     }
 
@@ -86,7 +91,7 @@ public:
         character->advance(dt);
 
         vec3 p = path->getValue(time);
-        std::cout << time << std::endl;
+        // std::cout << time << std::endl;
         vec3 c = camera->getCenter();
         camera->setCenter(glm::mix(c, vec3(p.x, 0.8, p.z), 10*dt));
     }
@@ -132,8 +137,17 @@ public:
         // obtained from the path spline, i.e. path->getValue(time).
         // Also rotate it so its z-axis aligns with the path spline's
         // velocity, path->getDerivative(time).
+        vec3 pos = path->getValue(time);
+        vec3 direct = path->getDerivative(time);
+        float sinval = glm::length(glm::cross(vec3(0,0,1),direct)) * 1.0 /
+                       (glm::length(direct));
+        float cosval = glm::dot(vec3(0,0,1), direct) /
+                       (glm::length(direct));
+        float rotateRate = acos(cosval) * (sinval > 0 ? 1 : -1) / M_PI * 180;
         glColor3f(1,0.8,0.2);
         glPushMatrix();
+        glTranslatef(pos.x, pos.y, pos.z);
+        glRotatef(rotateRate,0,1,0);
         character->draw();
         glPopMatrix();
 

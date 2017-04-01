@@ -56,14 +56,17 @@ inline vec3 Spline3::getValue(float t) {
     // valid for t0 = 0, t1 = 1, so you will have to use a modified
     // formula.
     int seg = findSegment(t);
+    // int seg = 0;
     vec3 p0 = this->points[seg].p;
     vec3 p0_p = this->points[seg].dp;
     vec3 p1 = this->points[seg + 1].p;
     vec3 p1_p = this->points[seg + 1].dp;
-    vec3 ft = (2 * t * t * t - 3 * t * t + 1) * p0 +
-              (t * t * t - 2 * t * t + t) * p0_p +
-              (-2 * t * t * t + 3 * t * t) * p1 +
-              (t * t * t - t * t) * p1_p;
+    float tp = (t - this->points[seg].t) /
+               (this->points[seg + 1].t - this->points[seg].t);
+    vec3 ft = (2 * tp * tp * tp - 3 * tp * tp + 1) * p0 +
+              (tp * tp * tp - 2 * tp * tp + tp) * p0_p +
+              (-2 * tp * tp * tp + 3 * tp * tp) * p1 +
+              (tp * tp * tp - tp * tp) * p1_p;
     return ft;
     // return vec3(0,0,0);
 
@@ -76,17 +79,19 @@ inline vec3 Spline3::getDerivative(float t) {
     // spline function. Be careful about how rescaling affects
     // derivatives.
 
-    return vec3(0,0,0);
     int seg = findSegment(t);
+
+    // int seg = 0;
     vec3 p0 = this->points[seg].p;
     vec3 p0_p = this->points[seg].dp;
     vec3 p1 = this->points[seg + 1].p;
     vec3 p1_p = this->points[seg + 1].dp;
-    vec3 ft = (6 * t * t - 6 * t) * p0 +
-              (3 * t * t - 4 * t + 1) * p0_p +
-              (-6 * t * t + 6 * t) * p1 +
-              (3 * t * t - 2 * t) * p1_p;
-    std::cout << ft.x << " " << ft.y << " " << ft.z << std::endl;
+    float tp = (t - this->points[seg].t) /
+               (this->points[seg + 1].t - this->points[seg].t);
+    vec3 ft = (6 * tp * tp - 6 * tp) * p0 +
+              (3 * tp * tp - 4 * tp + 1) * p0_p +
+              (-6 * tp * tp + 6 * tp) * p1 +
+              (3 * tp * tp - 2 * tp) * p1_p;
     return ft;
 }
 
