@@ -86,6 +86,7 @@ public:
         character->advance(dt);
 
         vec3 p = path->getValue(time);
+        std::cout << time << std::endl;
         vec3 c = camera->getCenter();
         camera->setCenter(glm::mix(c, vec3(p.x, 0.8, p.z), 10*dt));
     }
