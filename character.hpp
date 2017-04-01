@@ -10,6 +10,7 @@
 #include "reader.hpp"
 using namespace std;
 using glm::vec3;
+using glm::vec4;
 using glm::mat4;
 
 // Forward declarations
@@ -192,9 +193,7 @@ inline void Character::draw() {
   // glTranslatef(m[0][0],
   //              m[1][1],
   //              m[2][2]);
-  // glTranslatef(this->getCurrentPosition().x,
-  //              this->getCurrentPosition().y,
-  //              this->getCurrentPosition().z);
+
   glScalef(0.05, 0.05, 0.05);
   Draw::sphere(vec3(0,0,0),1);
   glScalef(20, 20, 20);
@@ -213,24 +212,32 @@ inline void Bone::draw() {
     // TODO: Draw the bone as a capsule (a cylinder capped by
     // spheres). Translate to the end of the bone vector and draw the
     // bone's children, recursively.
-  vec3 rotateVec = glm::normalize(glm::cross(vec3(0,0,1), getBoneVector()));
-  float sinval = glm::length(glm::cross(vec3(0,0,1),getBoneVector())) * 1.0 /
-                 (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
-  float cosval = glm::dot(vec3(0,0,1), getBoneVector()) /
-                 (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
-  float rotateRate = acos(cosval) * (sinval > 0 ? 1 : 1);
-  rotateRate = rotateRate / M_PI * 180;
+  // vec3 rotateVec = glm::normalize(glm::cross(vec3(0,0,1), getBoneVector()));
+  // float sinval = glm::length(glm::cross(vec3(0,0,1),getBoneVector())) * 1.0 /
+  //                (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
+  // float cosval = glm::dot(vec3(0,0,1), getBoneVector()) /
+  //                (glm::length(vec3(0,0,1)) * glm::length(getBoneVector()));
+  // float rotateRate = acos(cosval) * (sinval > 0 ? 1 : -1);
+  // rotateRate = rotateRate / M_PI * 180;
+
+  vec3 a (1,0,0);
+  vec3 b = this->direction;
+  if (glm::distance(a,b) < 0.01 || glm::distance(a,-b) < 0.01)
+    a = vec3(0,1,0);
+  vec3 y = glm::cross(a,b);
+  vec3 z = glm::cross(b,y);
+  mat4 m;
+  m[0][0] = b.x;  m[1][0] = b.y;  m[2][0] = b.z;
+  m[0][1] = y.x;  m[1][1] = y.y;  m[2][1] = y.z;
+  m[0][2] = z.x;  m[1][2] = z.y;  m[2][2] = z.z;
+  m[0][3] = 0;    m[1][3] = 0;    m[2][3] = 1;
+  
   glPushMatrix();
-  glRotatef(rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
+  glMultMatrixf(&m[0][0]);
   glScalef(0.05, 0.05, length);
   Draw::unitCylinderZ();
   glScalef(20.0, 20.0, 1.0 / length);
-  glRotatef(-rotateRate, rotateVec.x, rotateVec.y, rotateVec.z);
-
-  glTranslatef(this->getBoneVector().x,
-               this->getBoneVector().y,
-               this->getBoneVector().z);
-  // glTranslatef(0,0,length);
+  glTranslatef(0,0,length);
   glScalef(0.05, 0.05, 0.05);
   Draw::sphere(vec3(0,0,0),1);
   glScalef(20, 20, 20);
