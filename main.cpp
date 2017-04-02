@@ -59,11 +59,11 @@ public:
         path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(1,0,-1)));
         path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,1)));
         */
-        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,5)));
-        path->points.push_back(SplinePoint3(5, vec3(0,0,0), vec3(-5,0,-5)));
-        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,5)));
-        path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(5,0,-5)));
-        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,5)));
+        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,8)));
+        path->points.push_back(SplinePoint3(5, vec3(0,0,0), vec3(-8,0,-8)));
+        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,8)));
+        path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(8,0,-8)));
+        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,8)));
         time = 0;
     }
 
@@ -88,6 +88,15 @@ public:
 
         // TODO: Modify this to control the speed of the character's
         // walk cycle animation.
+
+        vec3 direct = path->getDerivative(time);
+        vec3 sinval = glm::cross(vec3(0,0,1),direct) /
+                       glm::length(direct);
+        float cosval = glm::dot(vec3(0,0,1), direct) /
+                       (glm::length(direct));
+        float rotateRate = acos(cosval) / M_PI * 180;
+        time += (rotateRate / 180) * dt;
+        dt += (rotateRate / 180) * dt;
         character->advance(dt);
 
         vec3 p = path->getValue(time);
