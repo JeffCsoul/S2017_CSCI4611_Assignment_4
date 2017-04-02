@@ -21,4 +21,4 @@ You can find a executive program which is named `SplineWalk` in the folder the s
 1. This project is based on OpenGL and GLM libiary.
 2. I used the second way on the description, calculated the degree between the vec3(0,0,1) and the direction of the bone, then rotated it. Repeated this rotation operations for all bones.
 3. Enhanced the derivative value of points which build the Figure-eight path to make the figure more real.
-4. Decreased the speed of advancing frames when the character is approaching a turning point and kept the speed of advancing frames when it keeps moving.
+4. Decreased the speed of advancing frames when the character is approaching a turning point and kept the speed of advancing frames when it keeps moving. The actual speed would depend current turning angle of the character.
