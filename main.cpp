@@ -59,11 +59,11 @@ public:
         path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(1,0,-1)));
         path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,1)));
         */
-        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,3)));
-        path->points.push_back(SplinePoint3(5, vec3(0,0,5), vec3(-3,0,0)));
-        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,-3)));
-        path->points.push_back(SplinePoint3(15, vec3(0,0,-5), vec3(3,0,0)));
-        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,3)));
+        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,5)));
+        path->points.push_back(SplinePoint3(5, vec3(0,0,0), vec3(-5,0,-5)));
+        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,5)));
+        path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(5,0,-5)));
+        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,5)));
         time = 0;
     }
 
@@ -139,11 +139,11 @@ public:
         // velocity, path->getDerivative(time).
         vec3 pos = path->getValue(time);
         vec3 direct = path->getDerivative(time);
-        float sinval = glm::length(glm::cross(vec3(0,0,1),direct)) * 1.0 /
-                       (glm::length(direct));
+        vec3 sinval = glm::cross(vec3(0,0,1),direct) /
+                       glm::length(direct);
         float cosval = glm::dot(vec3(0,0,1), direct) /
                        (glm::length(direct));
-        float rotateRate = acos(cosval) * (sinval > 0 ? 1 : -1) / M_PI * 180;
+        float rotateRate = acos(cosval) * (sinval.y > 0 ? 1 : -1) / M_PI * 180;
         glColor3f(1,0.8,0.2);
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
