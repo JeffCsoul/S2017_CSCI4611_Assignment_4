@@ -89,18 +89,20 @@ public:
         // TODO: Modify this to control the speed of the character's
         // walk cycle animation.
 
-        vec3 direct = path->getDerivative(time);
-        vec3 sinval = glm::cross(vec3(0,0,1),direct) /
-                       glm::length(direct);
-        float cosval = glm::dot(vec3(0,0,1), direct) /
-                       (glm::length(direct));
-        float rotateRate = acos(cosval) / M_PI * 180;
-        time += (rotateRate / 180) * dt;
-        dt += (rotateRate / 180) * dt;
+        // vec3 direct = path->getDerivative(time);
+        // vec3 sinval = glm::cross(vec3(0,0,1),direct) /
+        //                glm::length(direct);
+        // float cosval = glm::dot(vec3(0,0,1), direct) /
+        //                (glm::length(direct));
+        // float rotateRate = acos(cosval) / M_PI * 180;
+        // time += (rotateRate / 180) * dt;
+        float baseSpeed = glm::length(Config::baseVelocity);
+        float currentSpeed = glm::length(path->getDerivative(time));
+        dt *= currentSpeed / baseSpeed;
         character->advance(dt);
 
         vec3 p = path->getValue(time);
-        // std::cout << time << std::endl;
+        // std::cout << dt << std::endl;
         vec3 c = camera->getCenter();
         camera->setCenter(glm::mix(c, vec3(p.x, 0.8, p.z), 10*dt));
     }
