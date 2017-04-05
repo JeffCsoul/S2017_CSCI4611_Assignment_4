@@ -64,9 +64,9 @@ inline vec3 Spline3::getValue(float t) {
     float tp = (t - this->points[seg].t) /
                (this->points[seg + 1].t - this->points[seg].t);
     vec3 ft = (2 * tp * tp * tp - 3 * tp * tp + 1) * p0 +
-              (tp * tp * tp - 2 * tp * tp + tp) * p0_p +
+              (tp * tp * tp - 2 * tp * tp + tp) * p0_p * (this->points[seg + 1].t - this->points[seg].t) +
               (-2 * tp * tp * tp + 3 * tp * tp) * p1 +
-              (tp * tp * tp - tp * tp) * p1_p;
+              (tp * tp * tp - tp * tp) * p1_p * (this->points[seg + 1].t - this->points[seg].t);
     return ft;
     // return vec3(0,0,0);
 
@@ -88,9 +88,9 @@ inline vec3 Spline3::getDerivative(float t) {
     vec3 p1_p = this->points[seg + 1].dp;
     float tp = (t - this->points[seg].t) /
                (this->points[seg + 1].t - this->points[seg].t);
-    vec3 ft = (6 * tp * tp - 6 * tp) * p0 +
+    vec3 ft = (6 * tp * tp - 6 * tp) * p0 / (this->points[seg + 1].t - this->points[seg].t) +
               (3 * tp * tp - 4 * tp + 1) * p0_p +
-              (-6 * tp * tp + 6 * tp) * p1 +
+              (-6 * tp * tp + 6 * tp) * p1 / (this->points[seg + 1].t - this->points[seg].t) +
               (3 * tp * tp - 2 * tp) * p1_p;
     return ft;
 }

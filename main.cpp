@@ -59,11 +59,11 @@ public:
         path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(1,0,-1)));
         path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,1)));
         */
-        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,8)));
-        path->points.push_back(SplinePoint3(5, vec3(0,0,0), vec3(-8,0,-8)));
-        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,8)));
-        path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(8,0,-8)));
-        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,8)));
+        path->points.push_back(SplinePoint3(0, vec3(5,0,0), vec3(0,0,1)));
+        path->points.push_back(SplinePoint3(5, vec3(0,0,0), vec3(-1,0,-1)));
+        path->points.push_back(SplinePoint3(10, vec3(-5,0,0), vec3(0,0,1)));
+        path->points.push_back(SplinePoint3(15, vec3(0,0,0), vec3(1,0,-1)));
+        path->points.push_back(SplinePoint3(20, vec3(5,0,0), vec3(0,0,1)));
         time = 0;
     }
 
